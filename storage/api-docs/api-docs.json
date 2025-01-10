@@ -2,92 +2,112 @@
     "openapi": "3.0.0",
     "info": {
         "title": "Blog API",
-        "description": "Documentação da API para Usuários, Posts e Tags.",
+        "description": "Documentação da API para gerenciamento de Usuários, Posts e Tags.",
+        "contact": {
+            "name": "Equipe de Suporte",
+            "email": "suporte@exemplo.com"
+        },
         "version": "1.0.0"
     },
     "servers": [
+        {
+            "url": "http://localhost:8000/api",
+            "description": "Servidor Local"
+        },
         {
             "url": "/api"
         }
     ],
     "paths": {
-        "/api": {},
-        "/api/register": {
+        "/api/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Listar todos os usuários",
+                "operationId": "c457726701591d1183b53aa71fc13441",
+                "responses": {
+                    "200": {
+                        "description": "Lista de usuários",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/User"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "tags": [
-                    "Autenticação"
+                    "Users"
                 ],
-                "summary": "Registrar um novo usuário",
-                "description": "Registra um novo usuário no sistema.",
-                "operationId": "8a56853624e025573120a09a4c75d468",
+                "summary": "Criar um novo usuário",
+                "operationId": "592819a0265360b2014512d6dbfaf0e7",
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "name",
-                                    "email",
-                                    "password",
-                                    "password_confirmation"
-                                ],
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "example": "John Doe"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "example": "johndoe@example.com"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "example": "password"
-                                    },
-                                    "password_confirmation": {
-                                        "type": "string",
-                                        "example": "password"
-                                    }
-                                },
-                                "type": "object"
+                                "$ref": "#/components/schemas/User"
                             }
                         }
                     }
                 },
                 "responses": {
-                    "200": {
-                        "description": "Usuário registrado com sucesso.",
+                    "201": {
+                        "description": "Usuário criado com sucesso.",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "user": {
-                                            "type": "object"
-                                        },
-                                        "token": {
-                                            "type": "string",
-                                            "example": "jwt_token_aqui"
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/User"
                                 }
                             }
                         }
-                    },
-                    "422": {
-                        "description": "Erro de validação."
-                    },
-                    "500": {
-                        "description": "Erro no servidor."
                     }
                 }
             }
         }
     },
+    "components": {
+        "schemas": {
+            "User": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "johndoe@example.com"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-01-01T00:00:00Z"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-01-02T00:00:00Z"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
     "tags": [
         {
-            "name": "Autenticação",
-            "description": "Autenticação"
+            "name": "Users",
+            "description": "Endpoints relacionados a Usuários"
         }
     ]
 }

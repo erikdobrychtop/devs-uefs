@@ -8,48 +8,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-/**
- * @OA\Info(
- *     title="Blog API",
- *     version="1.0.0",
- *     description="Documentação da API para Usuários, Posts e Tags."
- * )
- *
- * @OA\PathItem(
- *     path="/api"
- * )
- */
 class AuthController extends Controller
 {
-    /**
-     * @OA\Post(
-     *     path="/api/register",
-     *     tags={"Autenticação"},
-     *     summary="Registrar um novo usuário",
-     *     description="Registra um novo usuário no sistema.",
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             required={"name", "email", "password", "password_confirmation"},
-     *             @OA\Property(property="name", type="string", example="John Doe"),
-     *             @OA\Property(property="email", type="string", example="johndoe@example.com"),
-     *             @OA\Property(property="password", type="string", example="password"),
-     *             @OA\Property(property="password_confirmation", type="string", example="password")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Usuário registrado com sucesso.",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="user", type="object"),
-     *             @OA\Property(property="token", type="string", example="jwt_token_aqui")
-     *         )
-     *     ),
-     *     @OA\Response(response=422, description="Erro de validação."),
-     *     @OA\Response(response=500, description="Erro no servidor.")
-     * )
-     */
-            public function register(Request $request)
+    
+    public function register(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',

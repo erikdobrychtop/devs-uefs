@@ -4,7 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Services\UserService;
 use Illuminate\Http\Request;
-
+/**
+ * @OA\Tag(
+ *     name="Users",
+ *     description="Endpoints relacionados a Usuários"
+ * )
+ */
 class UserController extends Controller
 {
     protected $userService;
@@ -14,21 +19,45 @@ class UserController extends Controller
         $this->userService = $userService;
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/users",
+     *     tags={"Users"},
+     *     summary="Listar todos os usuários",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de usuários",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/User")
+     *         )
+     *     )
+     * )
+     */
     public function index()
     {
         return response()->json($this->userService->getAllUsers());
     }
 
-    /**
-     * Exibe um usuário específico.
-     */
     public function show($id)
     {
         return response()->json($this->userService->getUserById($id));
     }
-
     /**
-     * Cria um novo usuário.
+     * @OA\Post(
+     *     path="/api/users",
+     *     tags={"Users"},
+     *     summary="Criar um novo usuário",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/User")
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Usuário criado com sucesso.",
+     *         @OA\JsonContent(ref="#/components/schemas/User")
+     *     )
+     * )
      */
     public function store(Request $request)
     {
