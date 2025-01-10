@@ -25,6 +25,27 @@ Route::middleware('auth:api')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('profile', [AuthController::class, 'profile']);
 
-    Route::apiResource('posts', PostController::class);
-    Route::apiResource('tags', TagController::class);
+    Route::prefix('users')->group(function () {
+        Route::get('/', [UserController::class, 'index']);       // Listar todos os usuários
+        Route::get('/{id}', [UserController::class, 'show']);    // Exibir um usuário
+        Route::post('/', [UserController::class, 'store']);      // Criar um novo usuário
+        Route::put('/{id}', [UserController::class, 'update']);  // Atualizar um usuário
+        Route::delete('/{id}', [UserController::class, 'destroy']); // Remover um usuário
+    });
+    
+    Route::prefix('posts')->group(function () {
+        Route::get('/', [PostController::class, 'index']);
+        Route::get('/{id}', [PostController::class, 'show']);
+        Route::post('/', [PostController::class, 'store']);
+        Route::put('/{id}', [PostController::class, 'update']);
+        Route::delete('/{id}', [PostController::class, 'destroy']);
+    });
+    
+    Route::prefix('tags')->group(function () {
+        Route::get('/', [TagController::class, 'index']);
+        Route::get('/{id}', [TagController::class, 'show']);
+        Route::post('/', [TagController::class, 'store']);
+        Route::put('/{id}', [TagController::class, 'update']);
+        Route::delete('/{id}', [TagController::class, 'destroy']);
+    });
 });

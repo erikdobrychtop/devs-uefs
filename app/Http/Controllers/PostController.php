@@ -2,64 +2,54 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
+use App\Services\PostService;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $postService;
+
+    public function __construct(PostService $postService)
+    {
+        $this->postService = $postService;
+    }
+
     public function index()
     {
-        //
+        return response()->json($this->postService->getAllPosts());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function show($id)
     {
-        //
+        return response()->json($this->postService->getPostById($id));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        return response()->json($this->postService->createPost($data), 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Post $post)
+    public function update(Request $request, $id)
     {
-        //
+        $data = $request->validate([
+            'title' => 'sometimes|string|max:255',
+            'content' => 'sometimes|string',
+            'user_id' => 'sometimes|exists:users,id',
+        ]);
+
+        return response()->json($this->postService->updatePost($id, $data));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Post $post)
+    public function destroy($id)
     {
-        //
-    }
+        $this->postService->deletePost($id);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Post $post)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Post $post)
-    {
-        //
+        return response()->json(['message' => 'Post removido com sucesso!'], 200);
     }
 }

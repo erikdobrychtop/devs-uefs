@@ -2,55 +2,71 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    protected $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     public function index()
     {
-        return User::all();
+        return response()->json($this->userService->getAllUsers());
     }
 
+    /**
+     * Exibe um usuário específico.
+     */
+    public function show($id)
+    {
+        return response()->json($this->userService->getUserById($id));
+    }
+
+    /**
+     * Cria um novo usuário.
+     */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $data = $request->validate([
             'name' => 'required|string',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6',
         ]);
 
-        $validated['password'] = bcrypt($validated['password']);
-
-        return User::create($validated);
+        $data['password'] = bcrypt($data['password']);
+        return response()->json($this->userService->createUser($data));
     }
 
-    public function show(User $user)
+    /**
+     * Atualiza um usuário existente.
+     */
+    public function update(Request $request, $id)
     {
-        return $user->load('posts');
-    }
-
-    public function update(Request $request, User $user)
-    {
-        $validated = $request->validate([
-            'name' => 'sometimes|string',
-            'email' => 'sometimes|email|unique:users,email,' . $user->id,
-            'password' => 'sometimes|string|min:6',
+        $data = $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|email|unique:users,email,' . $id,
+            'password' => 'sometimes|min:6',
         ]);
 
-        if (isset($validated['password'])) {
-            $validated['password'] = bcrypt($validated['password']);
+        if (isset($data['password'])) {
+            $data['password'] = bcrypt($data['password']);
         }
 
-        $user->update($validated);
-
-        return $user;
+        return response()->json($this->userService->updateUser($id, $data));
     }
 
-    public function destroy(User $user)
+    /**
+     * Remove um usuário.
+     */
+    public function destroy($id)
     {
-        $user->delete();
+        $this->userService->deleteUser($id);
 
-        return response()->noContent();
+        return response()->json(['message' => 'Usuário removido com sucesso!'], 200);
     }
 }

@@ -2,64 +2,50 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tag;
+use App\Services\TagService;
 use Illuminate\Http\Request;
 
 class TagController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $tagService;
+
+    public function __construct(TagService $tagService)
+    {
+        $this->tagService = $tagService;
+    }
+
     public function index()
     {
-        //
+        return response()->json($this->tagService->getAllTags());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function show($id)
     {
-        //
+        return response()->json($this->tagService->getTagById($id));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        return response()->json($this->tagService->createTag($data), 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Tag $tag)
+    public function update(Request $request, $id)
     {
-        //
+        $data = $request->validate([
+            'name' => 'sometimes|string|max:255',
+        ]);
+
+        return response()->json($this->tagService->updateTag($id, $data));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Tag $tag)
+    public function destroy($id)
     {
-        //
-    }
+        $this->tagService->deleteTag($id);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Tag $tag)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Tag $tag)
-    {
-        //
+        return response()->json(['message' => 'Tag removida com sucesso!'], 200);
     }
 }
