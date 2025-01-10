@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel_app
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - "8080:80" # Porta configurável
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: laravel_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: sail
+      MYSQL_PASSWORD: password
+    ports:
+      - "3307:3306" # Porta 3307 no host mapeia para a porta 3306 no contêiner
+
+  webserver:
+    image: nginx:alpine
+    container_name: laravel_web
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx:/etc/nginx/conf.d
+    ports:
+      - "8081:80" # Porta 8081 no host mapeia para a porta 80 no contêiner
+    depends_on:
+      - app
