@@ -8,12 +8,12 @@ class PostRepository
 {
     public function all()
     {
-        return Post::all();
+        return Post::with('tags')->get();
     }
 
     public function find($id)
     {
-        return Post::findOrFail($id);
+        return Post::with('tags')->findOrFail($id);
     }
 
     public function create(array $data)

@@ -1,24 +1,45 @@
-FROM php:8.2-fpm
+# Use PHP 8.3 com Apache
+FROM php:8.3-apache
 
-# Atualizar e instalar dependências
+# Use uma versão específica do Composer
+COPY --from=composer:2.2.10 /usr/bin/composer /usr/bin/composer
+
+# Configurar dependências e extensões PHP
 RUN apt-get update && apt-get install -y \
     libpq-dev \
-    libzip-dev \
     zip \
     unzip \
-    git \
-    mariadb-client \
-    && docker-php-ext-install pdo pdo_mysql
+    && docker-php-ext-install pdo pdo_pgsql
 
-# Configurar o diretório de trabalho
+# Instale dependências necessárias
+RUN apt-get update && apt-get install -y \
+    libzip-dev zip unzip libpng-dev libonig-dev libxml2-dev \
+    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath gd
+
+# Habilitar o mod_rewrite no Apache (necessário para Laravel)
+RUN a2enmod rewrite
+
+# Definir o diretório de trabalho
 WORKDIR /var/www/html
 
-# Instalar o Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+# Copiar o código do Laravel
+COPY . .
 
-# Copiar o código do projeto para dentro do contêiner
-COPY . /var/www/html
-
-# Configurar permissões para o Laravel
+# Definir permissões para o usuário www-data (Apache)
 RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+    && chmod -R 755 /var/www/html/storage \
+    && chmod -R 755 /var/www/html/bootstrap/cache
+
+# Instalar dependências do Laravel
+RUN composer install
+
+# Ativar o mod_rewrite no Apache
+RUN a2enmod rewrite
+
+# Configurar permissões
+RUN chown -R www-data:www-data storage bootstrap/cache
+
+# Expor a porta 80 do Apache
+EXPOSE 80
+
+CMD ["apache2-foreground"]
