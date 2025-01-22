@@ -30,10 +30,8 @@ class PostControllerTest extends TestCase
     /** @test */
     public function it_can_list_all_posts()
     {
-        // Criar posts de teste
         Post::factory()->count(5)->create();
 
-        // Requisição para listar todos os posts
         $response = $this->withHeader('Authorization', "Bearer {$this->token}")
             ->getJson('/api/posts');
 
@@ -42,13 +40,7 @@ class PostControllerTest extends TestCase
                 'message',
                 'data' => [
                     '*' => [
-                        'id',
-                        'title',
-                        'content',
-                        'user_id',
-                        'tags',
-                        'created_at',
-                        'updated_at',
+                        'id', 'title', 'content', 'user_id', 'tags', 'created_at', 'updated_at',
                     ],
                 ],
             ]);
@@ -89,9 +81,7 @@ class PostControllerTest extends TestCase
             ->postJson('/api/posts', $postData);
 
         $response->assertStatus(201)
-            ->assertJson([
-                'message' => 'Post criado com sucesso.',
-            ]);
+            ->assertJson(['message' => 'Post criado com sucesso.']);
 
         $this->assertDatabaseHas('posts', [
             'title' => $postData['title'],
@@ -123,9 +113,7 @@ class PostControllerTest extends TestCase
             ->putJson("/api/posts/{$post->id}", $updateData);
 
         $response->assertStatus(200)
-            ->assertJson([
-                'message' => 'Post atualizado com sucesso.',
-            ]);
+            ->assertJson(['message' => 'Post atualizado com sucesso.']);
 
         $this->assertDatabaseHas('posts', [
             'id' => $post->id,
@@ -150,9 +138,7 @@ class PostControllerTest extends TestCase
             ->deleteJson("/api/posts/{$post->id}");
 
         $response->assertStatus(200)
-            ->assertJson([
-                'message' => 'Post removido com sucesso!',
-            ]);
+            ->assertJson(['message' => 'Post removido com sucesso!']);
 
         $this->assertDatabaseMissing('posts', [
             'id' => $post->id,
