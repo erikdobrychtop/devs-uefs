@@ -107,7 +107,7 @@ class PostController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"title", "content", "user_id"},
+     *             required={"title", "content"},
      *             @OA\Property(property="title", type="string", example="Meu Primeiro Post"),
      *             @OA\Property(property="content", type="string", example="Conteúdo do post."),
      *             @OA\Property(property="tags", type="array", @OA\Items(type="integer", example=2))

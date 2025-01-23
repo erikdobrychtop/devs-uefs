@@ -46,8 +46,7 @@ namespace App\Docs;
  *     description="Representa um post criado pelo usuário",
  *     @OA\Property(property="id", type="integer", example=1, description="ID do post"),
  *     @OA\Property(property="title", type="string", example="Meu Primeiro Post", description="Título do post"),
- *     @OA\Property(property="content", type="string", example="Este é o conteúdo do post.", description="Conteúdo do post"),
- *     @OA\Property(property="user_id", type="integer", example=1, description="ID do usuário que criou o post"),
+ *     @OA\Property(property="content", type="string", example="Este é o conteúdo do post.", description="Conteúdo do post"), 
  *     @OA\Property(
  *         property="tags",
  *         type="array",

@@ -55,8 +55,7 @@
                             "schema": {
                                 "required": [
                                     "title",
-                                    "content",
-                                    "user_id"
+                                    "content"
                                 ],
                                 "properties": {
                                     "title": {
@@ -688,11 +687,6 @@
                         "description": "Conteúdo do post",
                         "type": "string",
                         "example": "Este é o conteúdo do post."
-                    },
-                    "user_id": {
-                        "description": "ID do usuário que criou o post",
-                        "type": "integer",
-                        "example": 1
                     },
                     "tags": {
                         "description": "Lista de tags associadas ao post",
