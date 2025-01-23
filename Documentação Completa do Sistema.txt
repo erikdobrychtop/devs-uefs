@@ -1,0 +1,54 @@
+Documentação Completa do Sistema
+
+Visão Geral do Sistema
+O sistema é um CRUD de Posts e Tags, desenvolvido com um back-end em Laravel e um front-end em React. Ele utiliza JWT para autenticação e TailwindCSS para estilização moderna. O sistema permite gerenciar usuários, autenticação, posts e tags, oferecendo endpoints bem definidos para interagir com os dados.
+
+Arquitetura do Sistema
+A arquitetura do sistema é baseada em um modelo cliente-servidor:
+
+Back-End (API Laravel)
+Framework: Laravel 8+
+Autenticação: JWT
+Banco de Dados: MySQL ou PostgreSQL
+Componentes Principais:
+Models: Representação das tabelas do banco (User, Post, Tag).
+Controllers: Responsáveis pelo processamento de requisições HTTP.
+Services: Contêm a lógica de negócios.
+Middleware: Validações de autenticação e permissões.
+
+Front-End (React)
+Framework: React 18+.
+Roteamento: React Router.
+Estilização: TailwindCSS.
+Componentes Principais:
+   Login: Autenticação de usuários.
+   Registro: Registro de novos usuários.
+   Posts: Gerenciamento de posts com associação de tags.
+   Tags: CRUD completo para tags.
+
+Instruções de Instalação
+Após clonar o projeto, seguir estes passos.
+
+composer install
+Se não houver .env, copiar a .env.example.
+php artisan key:generate
+php artisan jwt:secret
+php artisan migrate
+
+
+Front end
+Clonar https://github.com/erikdobrychtop/front
+npm install
+npm run dev
+
+Tecnologias Utilizadas
+Back-End:
+-Laravel Framework
+-JWT Auth
+-Banco de Dados (MySQL ou PostgreSQL)
+
+Front-End:
+-React
+-React Router
+-Axios
+-TailwindCSS

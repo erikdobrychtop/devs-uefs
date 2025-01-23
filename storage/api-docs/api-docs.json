@@ -67,10 +67,6 @@
                                         "type": "string",
                                         "example": "Conteúdo do post."
                                     },
-                                    "user_id": {
-                                        "type": "integer",
-                                        "example": 1
-                                    },
                                     "tags": {
                                         "type": "array",
                                         "items": {
@@ -165,10 +161,6 @@
                                     "content": {
                                         "type": "string",
                                         "example": "Conteúdo atualizado."
-                                    },
-                                    "user_id": {
-                                        "type": "integer",
-                                        "example": 1
                                     },
                                     "tags": {
                                         "type": "array",

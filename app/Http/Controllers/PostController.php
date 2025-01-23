@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\PostService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
  * @OA\Tag(
@@ -109,7 +110,6 @@ class PostController extends Controller
      *             required={"title", "content", "user_id"},
      *             @OA\Property(property="title", type="string", example="Meu Primeiro Post"),
      *             @OA\Property(property="content", type="string", example="Conteúdo do post."),
-     *             @OA\Property(property="user_id", type="integer", example=1),
      *             @OA\Property(property="tags", type="array", @OA\Items(type="integer", example=2))
      *         )
      *     ),
@@ -127,13 +127,17 @@ class PostController extends Controller
     public function store(Request $request)
     {
         try {
+            // Obtém o usuário autenticado
+            $user = JWTAuth::parseToken()->authenticate();
+
             $data = $request->validate([
                 'title' => 'required|string|max:255',
                 'content' => 'required|string',
-                'user_id' => 'required|exists:users,id',
                 'tags' => 'sometimes|array',
                 'tags.*' => 'integer|exists:tags,id',
             ]);
+
+            $data['user_id'] = $user->id;
 
             $post = $this->postService->createPost($data);
 
@@ -175,7 +179,6 @@ class PostController extends Controller
      *         @OA\JsonContent(
      *             @OA\Property(property="title", type="string", example="Título Atualizado"),
      *             @OA\Property(property="content", type="string", example="Conteúdo atualizado."),
-     *             @OA\Property(property="user_id", type="integer", example=1),
      *             @OA\Property(property="tags", type="array", @OA\Items(type="integer", example=3))
      *         )
      *     ),
@@ -193,13 +196,17 @@ class PostController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            // Obtém o usuário autenticado
+            $user = JWTAuth::parseToken()->authenticate();
+
             $data = $request->validate([
                 'title' => 'sometimes|string|max:255',
                 'content' => 'sometimes|string',
-                'user_id' => 'sometimes|exists:users,id',
                 'tags' => 'sometimes|array',
                 'tags.*' => 'integer|exists:tags,id',
             ]);
+
+            $data['user_id'] = $user->id;
 
             $post = $this->postService->updatePost($id, $data);
 
